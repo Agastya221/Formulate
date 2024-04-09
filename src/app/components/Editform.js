@@ -46,9 +46,7 @@ export default function Editform() {
 
   const getUsers = async () => {
     try {
-      const response = await axios.get("/api/users/adduser", {
-        cache: "no-store"
-      });
+      const response = await axios.get("/api/users/adduser");
       return response.data
     } catch (error) {
       console.log("Error fetching users:", error);
