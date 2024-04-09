@@ -12,15 +12,14 @@ export default function Editform() {
   const isSubmitting = useSelector((state) => state.form.isSubmitting);
   const submitError = useSelector((state) => state.form.submitError);
   const isEditModalOpen = useSelector((state) => state.editModal.isEditModalOpen);
+  const updateuser = useSelector((state) => state.updateuser.users);
   console.log('isEditModalOpen:', isEditModalOpen);
   const userId = useSelector((state) => state.editModal.userId);
   console.log("userId:", userId);
 
   const fetchUserData = async (userId) => {
     try {
-      const response = await axios.get(`/api/users/${userId}`);
-      console.log(`/api/users/${userId}`);
-      const userData = response.data.user;
+      const userData = updateuser.find(user => user._id === userId);
       console.log("for pre fill form :", userData);
       // Pre-fill form fields with user data
 

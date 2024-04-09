@@ -7,7 +7,6 @@ import { updateUsers } from '@/lib/features/slice/updateuserSlice';
 import { toggleEditModal, setUserId } from '@/lib/features/slice/editmodalSlice';
 import { toggleDeleteModal } from '@/lib/features/slice/DeletemodalSlice';
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
 import Navbar from '../components/Navbar'
 import deleteicon from '../../../public/icons8-delete.svg'
 import Image from 'next/image'
@@ -19,9 +18,9 @@ import editsvg from "../../../public/edit-svgrepo-com.svg"
 import { setSubmitting } from "@/lib/features/slice/formSlice"
 export default function page() {
   const [selectedUsers, setSelectedUsers] = useState([]);
-
+  const [isSending,setisSending] = useState(false)
+  const [isLoading,setIsLoading] = useState(true)
   const dispatch = useDispatch();
-  const isSubmitting = useSelector((state) => state.form.isSubmitting);
   const isEditModalOpen = useSelector((state) => state.editModal.isEditModalOpen);
   const isModalOpen = useSelector((state) => state.modal.isModalOpen);
   const updateuser = useSelector((state) => state.updateuser.users);
@@ -51,7 +50,7 @@ export default function page() {
 
   const handleSendData = async () => {
     try {
-      dispatch(setSubmitting(true));
+      setisSending(true)
       // Fetching  complete user data based on selected user IDs
       const selectedUserData = selectedUsers.map(userId => {
         return updateuser.find(user => user._id === userId);
@@ -77,8 +76,14 @@ export default function page() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getUsers();
-      dispatch(updateUsers(response.users));
+      try {
+        const response = await getUsers();
+        dispatch(updateUsers(response.users));
+        setIsLoading(false); // Set loading state to false when data fetching is done
+      } catch (error) {
+        setIsLoading(false); // Set loading state to false on error
+        console.log("Error fetching users:", error);
+      }
     };
     fetchData();
   }, []);
@@ -98,7 +103,14 @@ export default function page() {
       <div >
         <Toaster/>
         <Navbar />
+        {isLoading ?( <div className='flex space-x-2 justify-center items-center bg-white h-screen dark:invert'>
+ 	<span className='sr-only'>Loading...</span>
+  	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+	<div className='h-8 w-8 bg-black rounded-full animate-bounce'></div>
+</div>) : (
         <div className="flex flex-col p-4 h-screen ">
+          
           <div className={` bg-opacity-20 ${isModalOpen || isEditModalOpen || isDeleteOpen ? 'blur-sm' : ''} relative overflow-x-auto shadow-md sm:rounded-lg`}>
             <div className="pb-4 bg-white dark:bg-gray-900">
               <label htmlFor="table-search" className="sr-only">Search</label>
@@ -133,7 +145,7 @@ export default function page() {
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {user.name}
                     </th>
-                    <td className="px-6 py-4">{user._id}</td>
+                    <td className="px-6 py-4">{user.id}</td>
                     <td className="px-6 py-4">{user.email}</td>
                     <td className="px-6 py-4">{user.PhoneNumber}</td>
                     <td className="px-6 py-4">{user.Hobbies}</td>
@@ -163,8 +175,9 @@ export default function page() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table> 
           </div>
+         
           <div className='flex justify-end'>
           <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" className="block m-2 p-2  text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleToggleModal} type="button">Add Data</button>
             <button 
@@ -172,13 +185,15 @@ export default function page() {
               onClick={handleSendData} 
               disabled={selectedUsers.length === 0}
             >
-              {isSubmitting ? 'Sending...' : 'Send'}
+              {isSending ? 'Sending...' : 'Send'}
             </button>
           </div>
           {isModalOpen && <Userform />}
           {isEditModalOpen && <Editform />}
           {isDeleteOpen && <DeleteModal/>}
         </div>
+         )}
+        
       </div>
   )
 }

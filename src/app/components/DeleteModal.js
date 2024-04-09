@@ -4,20 +4,13 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDeleteModal } from '@/lib/features/slice/DeletemodalSlice'
 import { setSubmitting } from "@/lib/features/slice/formSlice"
-import { updateUsers } from '@/lib/features/slice/updateuserSlice';
+import { updateUsers   } from '@/lib/features/slice/updateuserSlice';
 export default function DeleteModal() {
     const isSubmitting = useSelector((state) => state.form.isSubmitting);
-    const getUsers = async () => {
-        try {
-            const response = await axios.get("/api/users/adduser")
-            return response.data
-        } catch (error) {
-            console.log("Error fetching users:", error);
-            // Return empty array on error
-        }
-    };
     console.log("DeleteModal rendered");
+    
     const dispatch = useDispatch();
+    const userList = useSelector((state) => state.updateuser.users);
     const isDeleteOpen = useSelector((state) => state.deletemodal.isDeleteOpen);
     const userId = useSelector((state) => state.editModal.userId);
     console.log("userId:", userId);
@@ -32,8 +25,8 @@ export default function DeleteModal() {
             if (response.status === 200) {
                 console.log("User deleted successfully");
                 dispatch(toggleDeleteModal());
-                const updatedUsers = await getUsers();
-                dispatch(updateUsers(updatedUsers.users));
+                const updatedUserList = userList.filter(user => user._id !== userId);
+                dispatch(updateUsers(updatedUserList));
                 toast.success('User deleted successfully');
             } else {
                 console.log("Failed to delete user:", response.data);
