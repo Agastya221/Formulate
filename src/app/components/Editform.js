@@ -34,14 +34,12 @@ export default function Editform() {
     console.log("dirtyFields:", dirtyFields);
     console.log("isDirty:", isDirty);
   };
-  useEffect(() => {
     // console.log("userId:", userId);
     // Fetch user data based on userId when modal opens
     if (isEditModalOpen && userId) {
       console.log("Fetching user data...");
       fetchUserData(userId);
     }
-  }, [isEditModalOpen, userId]);
 
   const getUsers = async () => {
     try {
