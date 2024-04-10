@@ -17,29 +17,23 @@ export default function Editform() {
   const userId = useSelector((state) => state.editModal.userId);
   console.log("userId:", userId);
 
-  const fetchUserData = async (userId) => {
-    try {
-      const userData = updateuser.find(user => user._id === userId);
-      console.log("for pre fill form :", userData);
-      // Pre-fill form fields with user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (isEditModalOpen && userId) {
+        try {
+          const userData = updateuser.find(user => user._id === userId);
+          setValue("name", userData.name);
+          setValue("email", userData.email);
+          setValue("PhoneNumber", userData.PhoneNumber);
+          setValue("Hobbies", userData.Hobbies);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
 
-      setValue("name", userData.name);
-      setValue("email", userData.email);
-      setValue("PhoneNumber", userData.PhoneNumber);
-      setValue("Hobbies", userData.Hobbies);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-
-    console.log("dirtyFields:", dirtyFields);
-    console.log("isDirty:", isDirty);
-  };
-    // console.log("userId:", userId);
-    // Fetch user data based on userId when modal opens
-    if (isEditModalOpen && userId) {
-      console.log("Fetching user data...");
-      fetchUserData(userId);
-    }
+    fetchUserData();
+  }, [isEditModalOpen, userId, updateuser, setValue]);
 
   const getUsers = async () => {
     try {
