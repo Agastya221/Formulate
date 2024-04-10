@@ -15,10 +15,10 @@ export default function Navbar() {
           priority
         />
       <li className='space-x-6 list-none text-purple-400 cursor-pointer font-medium'>
-        <Link href='/Home'>Home</Link>
-        <Link href='/profile'>Profile</Link>
-        <Link href='/Login'>Pricing</Link>
-        <Link href='/Login'>Careers</Link>
+        <Link href='#'>Home</Link>
+        <Link href='#'>Profile</Link>
+        <Link href='#'>Pricing</Link>
+        <Link href='#'>Careers</Link>
       </li>
       <li className='space-x-6  list-none cursor-pointer font-medium'>
         <Link className='text-purple-400 hover:text-purple-200'  href='/login'>Log in</Link>

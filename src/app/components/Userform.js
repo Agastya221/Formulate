@@ -18,7 +18,9 @@ export default function Userform() {
 
   const getUsers = async () => {
     try {
-      const response = await axios.get("/api/users/adduser");
+      const response = await axios.get("/api/users/adduser",{
+        cache: "no-store"
+      });
       return response.data
     } catch (error) {
       console.log("Error fetching users:", error);

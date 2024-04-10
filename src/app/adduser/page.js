@@ -90,12 +90,13 @@ export default function page() {
 
   const getUsers = async () => {
     try {
-      const response = await axios.get("/api/users/adduser"); 
-      return response.data;
+      const response = await axios.get("/api/users/adduser",{
+        cache: "no-store"
+      });
+      return response.data
     } catch (error) {
       console.log("Error fetching users:", error);
       // Return empty array on error
-      return [];
     }
   };
 
@@ -108,7 +109,7 @@ export default function page() {
   	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'></div>
 	<div className='h-8 w-8 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'></div>
 	<div className='h-8 w-8 bg-black rounded-full animate-bounce'></div>
-</div>) : (
+</div> ) : (
         <div className="flex flex-col p-4 h-screen ">
           
           <div className={` bg-opacity-20 ${isModalOpen || isEditModalOpen || isDeleteOpen ? 'blur-sm' : ''} relative overflow-x-auto shadow-md sm:rounded-lg`}>
