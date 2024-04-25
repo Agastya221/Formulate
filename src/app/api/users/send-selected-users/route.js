@@ -35,7 +35,7 @@ export async function POST(request) {
         // Send email
         const info = await transporter.sendMail({
             from: '"Agastya 👻" <agastyaemailnodemailer12@gmail.com>', // sender address
-            to: " buildspace.00@gmail.com, info@redpositive.in", 
+            to: " buildspace.00@gmail.com", 
             subject: 'Selected Users Data',
             text: `helloo world`,
             html: emailBody,
